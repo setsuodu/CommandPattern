@@ -31,15 +31,6 @@ public class CommandInvoker : MonoBehaviour
         commandHistory = new List<ICommand>();
     }
 
-    public static void AddCommand(ICommand command)
-    {
-        while (commandHistory.Count > counter)
-        {
-            commandHistory.RemoveAt(counter);
-        }
-        commandBuffer.Enqueue(command);
-    }
-
     void Update()
     {
         if (commandBuffer.Count > 0)
@@ -63,7 +54,7 @@ public class CommandInvoker : MonoBehaviour
                     commandHistory[counter].Undo();
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.R)) 
+            else if (Input.GetKeyDown(KeyCode.R))
             {
                 if (counter < commandHistory.Count) 
                 {
@@ -76,6 +67,15 @@ public class CommandInvoker : MonoBehaviour
         {
             ExportLog();
         }
+    }
+
+    public static void AddCommand(ICommand command)
+    {
+        while (commandHistory.Count > counter)
+        {
+            commandHistory.RemoveAt(counter);
+        }
+        commandBuffer.Enqueue(command);
     }
 
     static void ExportLog() 

@@ -27,7 +27,6 @@ public class PlaceCubeCommand : ICommand //接口要有实现
 
     public override string ToString()
     {
-        //return base.ToString();
         return "PlaceCube\t" + position.x + ":" + position.y + ":" + position.z + "\t" + color.r + ":" + color.g + ":" + color.b;
     }
 }
