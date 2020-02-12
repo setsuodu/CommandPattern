@@ -8,10 +8,10 @@ using UnityEngine;
 
 public class MessageManager : Singleton<MessageManager>
 {
-    static Dictionary<byte, List<Action<BaseMessage>>> _msgHandlerMap = new Dictionary<byte, List<Action<BaseMessage>>>();
-    public List<BaseMessage> MsgBuffer = new List<BaseMessage>();
-    public Dictionary<long, MessageQueue> FrameMsgs = new Dictionary<long, MessageQueue>();
-    public Dictionary<long, MessageQueue> WaitMsgs = new Dictionary<long, MessageQueue>();
+    public static Dictionary<byte, List<Action<BaseMessage>>> _msgHandlerMap = new Dictionary<byte, List<Action<BaseMessage>>>(); // <消息类型, 动作委托列表>
+    public List<BaseMessage> MsgBuffer = new List<BaseMessage>(); // 临时变量
+    public Dictionary<int, MessageQueue> FrameMsgs = new Dictionary<int, MessageQueue>();
+    public Dictionary<int, MessageQueue> WaitMsgs = new Dictionary<int, MessageQueue>();
     private int _tryTime = 0;
 
     // 注册消息
@@ -43,7 +43,7 @@ public class MessageManager : Singleton<MessageManager>
     }
 
     // 得到某一帧消息
-    public MessageQueue GetMessages(long frameIdx)
+    public MessageQueue GetMessages(int frameIdx)
     {
         if (WaitMsgs.ContainsKey(frameIdx))
         {
@@ -74,11 +74,12 @@ public class MessageManager : Singleton<MessageManager>
     public void HandleMessage(BaseMessage msg)
     {
         List<Action<BaseMessage>> actions = GetActions(msg.Type);
+
         if (actions == null)
         {
             Debug.Log("Action null");
         }
-        if (actions != null)
+        else
         {
             for (int i = 0; i < actions.Count; i++)
             {
@@ -88,13 +89,13 @@ public class MessageManager : Singleton<MessageManager>
     }
 
     // 完成消息队列处理
-    public void CompleteMessageQueue(long frameIdx)
+    public void CompleteMessageQueue(int frameIdx)
     {
         RemoveWaitMessage(frameIdx);
     }
 
     // 移除等待消息
-    public void RemoveWaitMessage(long frameIdx)
+    public void RemoveWaitMessage(int frameIdx)
     {
         if (WaitMsgs.ContainsKey(frameIdx))
         {

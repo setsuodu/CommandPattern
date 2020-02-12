@@ -4,21 +4,25 @@
  * GetMessages[frameIdx]，获取帧消息
  * HandleMessage()，处理帧消息
  */
-
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using LitJson;
 
 public class LockStepManager : MonoBehaviour
 {
     public static LockStepManager Instance;
 
-    public const long DEFAULT_START_FRAME = 0;  // 起始帧
-    public long frameIdx;                       // 帧号
+    public int FPS = 30;
+    public const int DEFAULT_START_FRAME = 0;   // 起始帧
+    public int frameIdx;                        // 帧号（int完全足够）
     private float _remainTime = 0f;             // 距离下一帧的时间
     private float _frameLength = 0.033f;        // 单位帧的时间长度
 
-    public bool IsReplay;
+    public bool IsStart;
+    [SerializeField] bool IsReplay;
+    [SerializeField] List<MessageQueue> queueList = new List<MessageQueue>();
 
     void Awake()
     {
@@ -27,11 +31,14 @@ public class LockStepManager : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = FPS;
         frameIdx = DEFAULT_START_FRAME;
     }
 
     void Update()
     {
+        if (!IsStart) return;
+
         _remainTime += Time.deltaTime;          // 跑时间
 
         while (_remainTime > _frameLength)      // 到了下一帧的时间，向下推进一帧
@@ -55,7 +62,7 @@ public class LockStepManager : MonoBehaviour
     #region Client
 
     // 把这一帧所有玩家操作数据，发给服务器
-    void SendInput(long frame)
+    void SendInput(int frame)
     {
         SimServer.Instance.Send(frame); //TODO: 这里仅仅是模拟
     }
@@ -80,6 +87,9 @@ public class LockStepManager : MonoBehaviour
     bool HandleMessages()
     {
         MessageQueue msgQueue = MessageManager.Instance.GetMessages(frameIdx);
+        if (!IsReplay)
+            queueList.Add(msgQueue);
+
         if (msgQueue != null) // 消息管理器中有缓存消息
         {
             for (int i = 0; i < msgQueue.messages.Length; i++)
@@ -93,4 +103,55 @@ public class LockStepManager : MonoBehaviour
     }
 
     #endregion
+
+    public void ControlStart(bool value) 
+    {
+        IsStart = value;
+    }
+
+    [ContextMenu("Export")]
+    void Export()
+    {
+        string json = JsonMapper.ToJson(queueList);
+        Debug.Log(json);
+
+        string path = Path.Combine(Application.dataPath, "Logs/recode.txt");
+        File.WriteAllText(path, json);
+    }
+
+    [ContextMenu("Import")]
+    void Import()
+    {
+        IsReplay = true;
+
+        string path = Path.Combine(Application.dataPath, "Logs/recode.txt");
+        string json = File.ReadAllText(path);
+        //Debug.Log(json);
+
+        queueList = JsonMapper.ToObject<List<MessageQueue>>(json);
+        //Debug.Log(temList.Count);
+
+        //回放模式不用发送帧数据（SendInput）
+        //直接给 MessageManager 装填消息
+        //MessageManager.Instance.MsgBuffer = new List<BaseMessage>();
+
+        MessageManager.Instance.FrameMsgs = new Dictionary<int, MessageQueue>();
+        for (int i = 0; i < queueList.Count; i++)
+        {
+            var val = queueList[i].frameIdx;
+            var key = queueList[i];
+            MessageManager.Instance.FrameMsgs.Add(val, key);
+        }
+
+        MessageManager.Instance.WaitMsgs = new Dictionary<int, MessageQueue>();
+        for (int i = 0; i < queueList.Count; i++)
+        {
+            var val = queueList[i].frameIdx;
+            var key = queueList[i];
+            MessageManager.Instance.WaitMsgs.Add(val, key);
+        }
+        Debug.Log(MessageManager.Instance.WaitMsgs.Count);
+
+        IsStart = true;
+    }
 }

@@ -9,22 +9,29 @@ public class MovementInput : MonoBehaviour
 
     void Update()
     {
-        Vector2 inputDir = GetInputDirection();
-        if (inputDir != Vector2.zero)
-        {
-            SendMoveMessage(inputDir);
-        }
+        if (!LockStepManager.Instance.IsStart) return;
 
-        if (GetKeyDown_Space())
-        {
-            SendJumpMessage(true);
-        }
-
+        int _r = -1;
+        int _g = -1;
+        int _b = -1;
         if (GetKeyDown_1())
         {
-            Color color = new Color(Random.Range(0, 1f), Random.Range(0, 1f), Random.Range(0, 1f));
-            SendColorMessage(color);
+            _r = Random.Range(0, 1000);
+            _g = Random.Range(0, 1000);
+            _b = Random.Range(0, 1000);
         }
+
+        // 统一收集
+        var CurGameInput = new InputClass()
+        {
+            horizontal = (int)(GetInputDirection().x * 1000),
+            vertical = (int)(GetInputDirection().y * 1000),
+            isJump = GetKeyDown_Space(),
+            R = _r,
+            G = _g,
+            B = _b,
+        };
+        SendInputMessage(CurGameInput);
     }
 
     #region 输入按键
@@ -50,21 +57,9 @@ public class MovementInput : MonoBehaviour
 
     #region 发送消息
 
-    private void SendMoveMessage(Vector2 dir)
+    private void SendInputMessage(InputClass inputs)
     {
-        MoveMessage cmd = new MoveMessage(PlayerId, dir);
-        MessageRequest.Instance.SendMessage(cmd);
-    }
-
-    private void SendJumpMessage(bool jump)
-    {
-        JumpMessage cmd = new JumpMessage(PlayerId, jump);
-        MessageRequest.Instance.SendMessage(cmd);
-    }
-
-    private void SendColorMessage(Color color)
-    {
-        ColorMessage cmd = new ColorMessage(PlayerId, color);
+        BaseMessage cmd = new BaseMessage(0, PlayerId, inputs);
         MessageRequest.Instance.SendMessage(cmd);
     }
 

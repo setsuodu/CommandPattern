@@ -91,13 +91,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnMoveMsgReceived(MoveMessage msg)
+    public void OnInputMsgReceived(BaseMessage msg)
     {
+        #region 跳跃
+        if (msg.Inputs.isJump)
+            Jump(JumpHeight);
+        #endregion
+
+        #region 移动
         _forward = Camera.main.transform.TransformDirection(Vector3.forward); // 以摄像机为基准移动
         _forward.y = 0f;
         _forward = _forward.normalized;
         _right = new Vector3(_forward.z, 0.0f, -_forward.x);
-        _move = (msg.X * _right + msg.Y * _forward);
+        _move = (msg.Inputs.horizontal * _right + msg.Inputs.vertical * _forward) * 0.001f; // MoveMessage 是1000倍
         if (_controller.enabled)
             _controller.Move(_move * Time.deltaTime * RunningSpeed);
 
@@ -107,17 +113,15 @@ public class PlayerController : MonoBehaviour
             Quaternion newRot = Quaternion.Euler(new Vector3(0, angle, 0));
             transform.rotation = Quaternion.Slerp(transform.rotation, newRot, Time.deltaTime * AngulaSpeed);
         }
-    }
+        #endregion
 
-    public void OnJumpMsgReceived(JumpMessage msg)
-    {
-        Jump(JumpHeight);
-    }
-
-    public void OnColorMsgReceived(ColorMessage msg)
-    {
-        Color color = new Color(msg.R, msg.G, msg.B);
-        _render.material.color = color;
+        #region 颜色
+        if (msg.Inputs.R >= 0 && msg.Inputs.G >= 0 && msg.Inputs.B >= 0)
+        {
+            Color _color = new Color(msg.Inputs.R * 0.001f, msg.Inputs.G * 0.001f, msg.Inputs.B * 0.001f);
+            _render.material.color = _color; // ColorMessage 是1000倍
+        }
+        #endregion
     }
 
     #endregion

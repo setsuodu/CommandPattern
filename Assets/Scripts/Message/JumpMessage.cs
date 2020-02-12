@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-
+/*
 [Serializable]
 public class JumpMessage : BaseMessage
 {
@@ -13,3 +13,4 @@ public class JumpMessage : BaseMessage
         this.Jump = jump;
     }
 }
+*/

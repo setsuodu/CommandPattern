@@ -16,7 +16,7 @@ public class MessageRequest : MonoBehaviour
 
     public void SendMessage(BaseMessage message)
     {
-        Debug.Log(LockStepManager.Instance.frameIdx + "  玩家" + message.PlayerId + "，发送二进制数据： " + message.Type); //一个frame可以包含多个Message
+        //Debug.Log(LockStepManager.Instance.frameIdx + "  玩家" + message.PlayerId + "，发送二进制数据： " + message.Type); //一个frame可以包含多个Message
         CmdSendMessage(MessageManager.Instance.SerializeObj<BaseMessage>(message));
     }
 
@@ -32,7 +32,7 @@ public class MessageRequest : MonoBehaviour
     }
 
     // 请求某一帧的消息队列
-    public void RequestMessageQueueAtFrame(long frameIdx)
+    public void RequestMessageQueueAtFrame(int frameIdx)
     {
         ReturnMessageAtFrame(frameIdx);
     }
@@ -52,7 +52,7 @@ public class MessageRequest : MonoBehaviour
     }
 
     // 客户端接收到服务器消息
-    public void ReturnMessage(long frameIdx)
+    public void ReturnMessage(int frameIdx)
     {
         BaseMessage[] msgs = MessageManager.Instance.MsgBuffer.ToArray();
         MessageQueue msgQueue = new MessageQueue(frameIdx, msgs);
@@ -66,7 +66,7 @@ public class MessageRequest : MonoBehaviour
     }
 
     // 查询方法
-    public void ReturnMessageAtFrame(long frameIdx)
+    public void ReturnMessageAtFrame(int frameIdx)
     {
         MessageQueue msgQueue = null;
         if (MessageManager.Instance.FrameMsgs.ContainsKey(frameIdx))

@@ -8,7 +8,7 @@ public class GameServer : MonoBehaviour
 {
     public static GameServer Instance;
 
-    public long frameIdx;  // 帧号
+    public int frameIdx;  // 帧号
     public float _accumilatedTime = 0f;
     public float _frameLength = 0.067f; //帧率15
     public Text tickText;
@@ -31,7 +31,7 @@ public class GameServer : MonoBehaviour
 
         while (_accumilatedTime > _frameLength)
         {
-            long curFrameIdx = frameIdx;
+            int curFrameIdx = frameIdx;
 
             ServerFrameTurn(curFrameIdx);
 
@@ -42,7 +42,7 @@ public class GameServer : MonoBehaviour
         }
     }
 
-    void ServerFrameTurn(long curFrameIdx)
+    void ServerFrameTurn(int curFrameIdx)
     {
         MessageRequest.Instance.ReturnMessage(curFrameIdx);
     }

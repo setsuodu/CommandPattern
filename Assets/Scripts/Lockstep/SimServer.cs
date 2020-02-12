@@ -14,15 +14,15 @@ public class SimServer : MonoBehaviour
         Instance = this;
     }
 
-    public void Send(long frame) 
+    public void Send(int frame) 
     {
         ReturnMessage(frame);
     }
 
-    public void ReturnMessage(long frameIdx)
+    public void ReturnMessage(int frameIdx)
     {
-        BaseMessage[] msgs = MessageManager.Instance.MsgBuffer.ToArray();
-        MessageQueue msgQueue = new MessageQueue(frameIdx, msgs);
+        BaseMessage[] buffer = MessageManager.Instance.MsgBuffer.ToArray();
+        MessageQueue msgQueue = new MessageQueue(frameIdx, buffer);
         MessageManager.Instance.MsgBuffer.Clear();
 
         if (!MessageManager.Instance.FrameMsgs.ContainsKey(frameIdx))
