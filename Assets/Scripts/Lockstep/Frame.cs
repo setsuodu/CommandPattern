@@ -5,7 +5,6 @@ using UnityEngine;
 public class Frame : MonoBehaviour
 {
     public bool isRecord; //开关
-    public int FPS = 30;
     public int tick;
 
     private float tm;
@@ -13,7 +12,6 @@ public class Frame : MonoBehaviour
     void Start()
     {
         Debug.Log("VSync: " + QualitySettings.vSyncCount + " | FPS: " + Application.targetFrameRate);
-        Application.targetFrameRate = FPS;
     }
 
     void Update()
