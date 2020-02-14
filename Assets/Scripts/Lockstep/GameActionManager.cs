@@ -11,7 +11,6 @@ public class GameActionManager : MonoBehaviour
 
     void RegisteActionHanler()
     {
-        Debug.Log("RegisteActionHanler");
         MessageManager.Instance.RegisteMessage(0, OnInputMessageReceived);
     }
 
@@ -19,7 +18,6 @@ public class GameActionManager : MonoBehaviour
 
     void OnInputMessageReceived(BaseMessage msg)
     {
-        //Debug.Log(msg.Type);
         uint playerId = msg.PlayerId;
 
         PlayerController player = PlayerInput.Instance.GetComponent<PlayerController>(); //TODO: 改成从PlayerList中用Id找人

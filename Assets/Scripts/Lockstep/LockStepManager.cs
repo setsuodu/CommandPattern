@@ -64,7 +64,10 @@ public class LockStepManager : MonoBehaviour
     // 把这一帧所有玩家操作数据，发给服务器
     void SendInput(int frame)
     {
-        SimServer.Instance.Send(frame); //TODO: 这里仅仅是模拟
+        //SimServer.Instance.Send(frame); //TODO: 这里仅仅是模拟
+        Debug.Log($"{InputCollector.Instance.CurGameInput.R}, {InputCollector.Instance.CurGameInput.G}, {InputCollector.Instance.CurGameInput.B}");
+        BaseMessage cmd = new BaseMessage(0, 0, InputCollector.Instance.CurGameInput);
+        MessageRequest.Instance.SendMessage(cmd);
     }
 
     // 消息管理器中有缓存消息

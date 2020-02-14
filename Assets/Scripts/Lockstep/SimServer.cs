@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/* 
- * 模拟从服务器返回结果
- */
+// 模拟从服务器返回结果
 public class SimServer : MonoBehaviour
 {
     public static SimServer Instance;

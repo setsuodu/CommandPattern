@@ -16,14 +16,12 @@ public class MessageRequest : MonoBehaviour
 
     public void SendMessage(BaseMessage message)
     {
-        //Debug.Log(LockStepManager.Instance.frameIdx + "  玩家" + message.PlayerId + "，发送二进制数据： " + message.Type); //一个frame可以包含多个Message
         CmdSendMessage(MessageManager.Instance.SerializeObj<BaseMessage>(message));
     }
 
     public void RpcReturnMessage(byte[] bytes)
     {
         MessageQueue msgQueue = MessageManager.Instance.DesrializeObj<MessageQueue>(bytes);
-        //Debug.Log("Return: " + (msgQueue.frameIdx)); //TODO: Debug输出到Canvas
 
         if (msgQueue != null && !MessageManager.Instance.WaitMsgs.ContainsKey(msgQueue.frameIdx))
         {

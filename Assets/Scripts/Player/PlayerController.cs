@@ -14,15 +14,13 @@ public class PlayerController : MonoBehaviour
     private CharacterController _controller;
     private MeshRenderer _render;
 
-    private Vector3 _forward;
-    private Vector3 _right;
-    private Vector3 _move;
-    private Vector3 _velocity;
-
     // Input.
     public float _horizontal;
     public float _vertical;
-    private bool _jump;
+    private Vector3 _move;
+    private Vector3 _velocity;
+    private Vector3 _forward;
+    private Vector3 _right;
 
     void Awake()
     {
@@ -33,32 +31,17 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        /*
-        #region 输入
-        _horizontal = PlayerInput.Instance.GetHorizontalValue();
-        _vertical = PlayerInput.Instance.GetVerticalValue();
-        _jump = PlayerInput.Instance.GetJumpValue();
+        if (!LockStepManager.Instance.IsStart) return;
 
-        if (_jump)
-        {
-            Jump(JumpHeight);
-        }
-        #endregion
-
-        #region 移动
+        #region 插值
         _forward = Camera.main.transform.TransformDirection(Vector3.forward); // 以摄像机为基准移动
         _forward.y = 0f;
         _forward = _forward.normalized;
         _right = new Vector3(_forward.z, 0.0f, -_forward.x);
-        _move = (_horizontal * _right + _vertical * _forward);
 
         if (_controller.enabled)
-        {
             _controller.Move(_move * Time.deltaTime * RunningSpeed);
-        }
-        #endregion
 
-        #region 旋转
         if (_move.magnitude > 0.1f) // 移动增量
         {
             float angle = Mathf.Atan2(_move.x, _move.z) * Mathf.Rad2Deg;
@@ -66,7 +49,6 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, newRot, Time.deltaTime * AngulaSpeed);
         }
         #endregion
-        */
 
         #region 跳跃
         if (_velocity.y >= -MaxDownYVelocity)
@@ -99,23 +81,11 @@ public class PlayerController : MonoBehaviour
         #endregion
 
         #region 移动
-        _forward = Camera.main.transform.TransformDirection(Vector3.forward); // 以摄像机为基准移动
-        _forward.y = 0f;
-        _forward = _forward.normalized;
-        _right = new Vector3(_forward.z, 0.0f, -_forward.x);
         _move = (msg.Inputs.horizontal * _right + msg.Inputs.vertical * _forward) * 0.001f; // MoveMessage 是1000倍
-        if (_controller.enabled)
-            _controller.Move(_move * Time.deltaTime * RunningSpeed);
-
-        if (_move.magnitude > 0.1f) // 移动增量
-        {
-            float angle = Mathf.Atan2(_move.x, _move.z) * Mathf.Rad2Deg;
-            Quaternion newRot = Quaternion.Euler(new Vector3(0, angle, 0));
-            transform.rotation = Quaternion.Slerp(transform.rotation, newRot, Time.deltaTime * AngulaSpeed);
-        }
         #endregion
 
         #region 颜色
+        Debug.Log($"收到 {msg.Inputs.R}, {msg.Inputs.G}, {msg.Inputs.B}");
         if (msg.Inputs.R >= 0 && msg.Inputs.G >= 0 && msg.Inputs.B >= 0)
         {
             Color _color = new Color(msg.Inputs.R * 0.001f, msg.Inputs.G * 0.001f, msg.Inputs.B * 0.001f);

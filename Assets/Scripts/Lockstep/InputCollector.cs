@@ -2,10 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 玩家操作
-public class MovementInput : MonoBehaviour
+// 收集玩家操作
+public class InputCollector : MonoBehaviour
 {
+    public static InputCollector Instance;
+
     uint PlayerId = 0;
+    public InputClass CurGameInput;
+
+    void Awake()
+    {
+        Instance = this;
+
+        CurGameInput = new InputClass();
+    }
 
     void Update()
     {
@@ -22,16 +32,12 @@ public class MovementInput : MonoBehaviour
         }
 
         // 统一收集
-        var CurGameInput = new InputClass()
-        {
-            horizontal = (int)(GetInputDirection().x * 1000),
-            vertical = (int)(GetInputDirection().y * 1000),
-            isJump = GetKeyDown_Space(),
-            R = _r,
-            G = _g,
-            B = _b,
-        };
-        SendInputMessage(CurGameInput);
+        CurGameInput.horizontal = (int)(GetInputDirection().x * 1000);
+        CurGameInput.vertical = (int)(GetInputDirection().y * 1000);
+        CurGameInput.isJump = GetKeyDown_Space();
+        CurGameInput.R = _r;
+        CurGameInput.G = _g;
+        CurGameInput.B = _b;
     }
 
     #region 输入按键
@@ -51,16 +57,6 @@ public class MovementInput : MonoBehaviour
     private bool GetKeyDown_1()
     {
         return Input.GetKeyDown(KeyCode.Keypad1);
-    }
-
-    #endregion
-
-    #region 发送消息
-
-    private void SendInputMessage(InputClass inputs)
-    {
-        BaseMessage cmd = new BaseMessage(0, PlayerId, inputs);
-        MessageRequest.Instance.SendMessage(cmd);
     }
 
     #endregion

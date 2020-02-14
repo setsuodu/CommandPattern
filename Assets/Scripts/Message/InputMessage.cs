@@ -4,15 +4,12 @@
 public class InputClass
 {
     #region 每帧需要收集的参数
-    //public Vector2 inputUV; //Vector2不允许
     public int horizontal;
     public int vertical;
     public bool isJump;
-    //public Color color;
-    public int R, G, B;
-    //public bool isInputFire;
-    //public int skillId;
-    //public bool isSpeedUp;
+    public int R = -1;
+    public int G = -1;
+    public int B = -1;
     #endregion
     public InputClass() { }
     public void Echo()

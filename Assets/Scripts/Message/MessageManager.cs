@@ -51,20 +51,19 @@ public class MessageManager : Singleton<MessageManager>
         }
         else
         {
+            SimServer.Instance.ReturnMessage(frameIdx);
+
             // 等待队列中不存在，所以是本地慢了
             //if (LockStepManager.Instance.frameIdx < GameServer.Instance.frameIdx)
             //{
-            //    _tryTime++;
-            //    if (_tryTime >= 3)
-            //    {
-            //        MessageRequest.Instance.RequestMessageQueueAtFrame(frameIdx); // 超时，主动再次请求
-            //        _tryTime = 0;
-            //    }
+            //_tryTime++;
+            //if (_tryTime >= 3)
+            //{
+            //    MessageRequest.Instance.RequestMessageQueueAtFrame(frameIdx); // 超时，主动再次请求
+            //    _tryTime = 0;
+            //    Debug.Log("超时，主动请求");
             //}
-
-            // 要从服务器获取，或者从模拟服务器数据的类
-            // 接收 LockStepManager.SendInput 的结果
-            // 最终目的是 WaitMsgs.Add() 一个消息
+            //}
         }
         //Debug.LogError("GetMessages error");
         return null;
