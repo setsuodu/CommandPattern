@@ -42,7 +42,7 @@ public class CommandInvoker : MonoBehaviour
             // 回收历史记录
             commandHistory.Add(c);
             counter++;
-            Debug.Log("Command histroy length: " + commandHistory.Count);
+            Debug.Log($"Command histroy length: {commandHistory.Count}");
         }
         else 
         {

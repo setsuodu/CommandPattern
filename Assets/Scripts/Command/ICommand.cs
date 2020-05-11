@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface ICommand
 {
-    void Execute();
+    void Execute(); //执行
 
-    void Undo();
+    void Undo(); //回退
 }
