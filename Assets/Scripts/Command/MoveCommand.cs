@@ -4,27 +4,27 @@ using UnityEngine;
 
 public class MoveCommand : ICommand //接口要有实现
 {
-    Vector3 position;
-    Transform cube;
+    Transform target;
+    InputBuffer buffer;
 
-    public MoveCommand(Vector3 position, Transform cube) 
+    public MoveCommand(Transform target, InputBuffer buffer)
     {
-        this.position = position;
-        this.cube = cube;
+        this.target = target;
+        this.buffer = buffer;
     }
 
     public void Execute()
     {
-        InputFrame.PlaceCube(position, cube);
+        InputRecv.PlacePos(target, buffer);
     }
 
     public void Undo()
     {
-        InputFrame.RemoveCube(position, cube);
+        InputRecv.RemovePos(target, buffer);
     }
 
     public override string ToString()
     {
-        return "PlaceCube\t" + position.x + ":" + position.y + ":" + position.z;
+        return buffer.ToString();
     }
 }

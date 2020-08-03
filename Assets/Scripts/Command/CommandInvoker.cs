@@ -10,21 +10,6 @@ public class CommandInvoker : MonoBehaviour
     static List<ICommand> commandHistory;
     static int counter;
 
-    private static string logRoot;
-    private static string LogRoot
-    {
-        get 
-        {
-            if (string.IsNullOrEmpty(logRoot))
-                logRoot = Path.Combine(Application.dataPath, "Logs");
-
-            if (!Directory.Exists(logRoot))
-                Directory.CreateDirectory(logRoot);
-
-            return logRoot;
-        }
-    }
-
     void Awake()
     {
         commandBuffer = new Queue<ICommand>();
@@ -37,12 +22,11 @@ public class CommandInvoker : MonoBehaviour
         {
             ICommand c = commandBuffer.Dequeue();
             c.Execute();
-            //commandBuffer.Dequeue().Execute();
 
             // 回收历史记录
             commandHistory.Add(c);
             counter++;
-            Debug.Log($"Command histroy length: {commandHistory.Count}");
+            //Debug.Log($"Command histroy length: {commandHistory.Count}");
         }
         else 
         {
@@ -65,7 +49,7 @@ public class CommandInvoker : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            ExportLog();
+            //ExportLog();
         }
     }
 
@@ -78,16 +62,30 @@ public class CommandInvoker : MonoBehaviour
         commandBuffer.Enqueue(command);
     }
 
-    static void ExportLog() 
-    {
-        List<string> lines = new List<string>();
-        foreach (ICommand c in commandHistory) 
-        {
-            lines.Add(c.ToString());
-        }
+    //private static string logRoot;
+    //private static string LogRoot
+    //{
+    //    get 
+    //    {
+    //        if (string.IsNullOrEmpty(logRoot))
+    //            logRoot = Path.Combine(Application.dataPath, "Logs");
 
-        string fileName = "commandlog.txt";
-        string filePath = Path.Combine(LogRoot, fileName);
-        File.WriteAllLines(filePath, lines);
-    }
+    //        if (!Directory.Exists(logRoot))
+    //            Directory.CreateDirectory(logRoot);
+
+    //        return logRoot;
+    //    }
+    //}
+    //static void ExportLog() 
+    //{
+    //    List<string> lines = new List<string>();
+    //    foreach (ICommand c in commandHistory) 
+    //    {
+    //        lines.Add(c.ToString());
+    //    }
+
+    //    string fileName = "commandlog.txt";
+    //    string filePath = Path.Combine(LogRoot, fileName);
+    //    File.WriteAllLines(filePath, lines);
+    //}
 }
