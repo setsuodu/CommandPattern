@@ -5,10 +5,9 @@ using UnityEngine;
 
 public class CommandInvoker : MonoBehaviour
 {
-    static Queue<ICommand> commandBuffer;
-
-    static List<ICommand> commandHistory;
-    static int counter;
+    static Queue<ICommand> commandBuffer;//命令队列
+    static List<ICommand> commandHistory;//历史快照
+    public static int counter;
 
     void Awake()
     {
@@ -26,24 +25,26 @@ public class CommandInvoker : MonoBehaviour
             // 回收历史记录
             commandHistory.Add(c);
             counter++;
-            //Debug.Log($"Command histroy length: {commandHistory.Count}");
+            Debug.Log($"Command histroy length: {counter}");
         }
-        else 
+        else
         {
-            if (Input.GetKeyDown(KeyCode.Z))
+            if (Input.GetKey(KeyCode.Z))
             {
                 if (counter > 0)
                 {
                     counter--;
                     commandHistory[counter].Undo();
+                    Debug.Log($"Command histroy length: {counter}");
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.R))
+            else if (Input.GetKey(KeyCode.R))
             {
-                if (counter < commandHistory.Count) 
+                if (counter < commandHistory.Count)
                 {
                     commandHistory[counter].Execute();
                     counter++;
+                    Debug.Log($"Command histroy length: {counter}");
                 }
             }
         }
@@ -69,10 +70,8 @@ public class CommandInvoker : MonoBehaviour
     //    {
     //        if (string.IsNullOrEmpty(logRoot))
     //            logRoot = Path.Combine(Application.dataPath, "Logs");
-
     //        if (!Directory.Exists(logRoot))
     //            Directory.CreateDirectory(logRoot);
-
     //        return logRoot;
     //    }
     //}
@@ -83,7 +82,6 @@ public class CommandInvoker : MonoBehaviour
     //    {
     //        lines.Add(c.ToString());
     //    }
-
     //    string fileName = "commandlog.txt";
     //    string filePath = Path.Combine(LogRoot, fileName);
     //    File.WriteAllLines(filePath, lines);

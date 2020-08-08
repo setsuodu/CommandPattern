@@ -60,3 +60,8 @@ public class InputBuffer
         return $"Input：\t{(W ? "W" : "")}\t{(S ? "S" : "")}\t{(A ? "A" : "")}\t{(D ? "D" : "")}";
     }
 }
+
+public class InputRender
+{
+    public Vector3 position;
+}
