@@ -25,7 +25,7 @@ public class CommandInvoker : MonoBehaviour
             // 回收历史记录
             commandHistory.Add(c);
             counter++;
-            Debug.Log($"Command histroy length: {counter}");
+            //Debug.Log($"Command histroy length: {counter}");
         }
         else
         {
@@ -35,7 +35,7 @@ public class CommandInvoker : MonoBehaviour
                 {
                     counter--;
                     commandHistory[counter].Undo();
-                    Debug.Log($"Command histroy length: {counter}");
+                    Debug.Log($"Undo: {counter}");
                 }
             }
             else if (Input.GetKey(KeyCode.R))
@@ -44,14 +44,14 @@ public class CommandInvoker : MonoBehaviour
                 {
                     commandHistory[counter].Execute();
                     counter++;
-                    Debug.Log($"Command histroy length: {counter}");
+                    Debug.Log($"Redo: {counter}");
                 }
             }
         }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            //ExportLog();
-        }
+        //if (Input.GetKeyDown(KeyCode.E))
+        //{
+        //    ExportLog();
+        //}
     }
 
     public static void AddCommand(ICommand command)

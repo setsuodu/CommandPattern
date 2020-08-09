@@ -31,7 +31,7 @@ public class InputSend : MonoBehaviour
     //10f
     void FixedUpdate()
     {
-        if (!IsStart) 
+        if (!IsStart)
             return;
 
         Tick++;

@@ -15,6 +15,8 @@ public class DebugPanel : MonoBehaviour
         m_Start.onValueChanged.AddListener((value) =>
         {
             m_InputSend.IsStart = value;
+            //m_InputSend.m_Lerp = value ? Time.fixedDeltaTime : 1;
+
             value = !value;
         });
     }
