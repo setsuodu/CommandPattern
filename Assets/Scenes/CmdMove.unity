@@ -753,6 +753,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shadow: {fileID: 1489274918}
+  m_InputRecv: {fileID: 1489274916}
 --- !u!1 &1301400032
 GameObject:
   m_ObjectHideFlags: 0
@@ -961,7 +962,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InputSend: {fileID: 1489274915}
-  m_Lerp: 0.1
+  _lerpTime: 0
 --- !u!4 &1489274918
 Transform:
   m_ObjectHideFlags: 0

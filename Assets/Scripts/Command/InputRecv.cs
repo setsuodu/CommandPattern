@@ -6,6 +6,7 @@ using UnityEngine;
 public class InputRecv : MonoBehaviour
 {
     public InputSend m_InputSend;
+    public float _lerpTime;
 
     static Queue<InputRender> buffers;
     InputRender frameBuffer;
@@ -22,6 +23,7 @@ public class InputRecv : MonoBehaviour
         {
             //新的帧
             frameBuffer = buffers.Dequeue();
+            _lerpTime = 0;
         }
 
         if (frameBuffer == null)
