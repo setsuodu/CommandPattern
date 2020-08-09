@@ -10,12 +10,6 @@ public class InputRecv : MonoBehaviour
     static Queue<InputRender> buffers;
     InputRender frameBuffer;
 
-    public float m_Lerp; //前后两帧数据间隔时间（默认0.1s）
-
-    private float AccumilatedTime = 0f;
-
-    private float FrameLength = 0.02f; //50 miliseconds
-
     void Awake()
     {
         buffers = new Queue<InputRender>();

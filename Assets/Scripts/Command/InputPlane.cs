@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class InputPlane : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class InputPlane : MonoBehaviour
 
     void Start()
     {
-        cubePrefab = Resources.Load<GameObject>("Prefabs/Cube").transform;
+        cubePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Bundles/Prefabs/Cube.prefab").transform;
     }
 
     void Update()
