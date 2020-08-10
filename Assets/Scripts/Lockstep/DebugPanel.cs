@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class DebugPanel : MonoBehaviour
 {
-    public InputSend m_InputSend;
+    public InputRecv m_InputRecv;
 
     public Text m_Text;
     public Toggle m_Start;
@@ -14,7 +14,7 @@ public class DebugPanel : MonoBehaviour
     {
         m_Start.onValueChanged.AddListener((value) =>
         {
-            m_InputSend.IsStart = value;
+            m_InputRecv.IsStart = value;
             //m_InputSend.m_Lerp = value ? Time.fixedDeltaTime : 1;
 
             value = !value;
