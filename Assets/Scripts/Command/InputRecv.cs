@@ -15,6 +15,9 @@ public class InputRecv : MonoBehaviour
     bool m_IsJump;
 
     public AnimationCurve cJump;
+    public const float jumpHeight = 3.0f;
+    public const float gravityValue = -1;//-9.81f;
+    public static Vector3 playerVelocity;
 
     public static bool W()
     {
@@ -57,15 +60,6 @@ public class InputRecv : MonoBehaviour
             return;
 
         transform.position = frameBuffer.position;
-
-        //if (lastFrameBuffer != null && lastFrameBuffer.position.y > 0)
-        //{
-        //    var pos = transform.position;
-        //    pos.y = 0;
-        //    transform.position = pos;
-        //}
-
-        //lastFrameBuffer = frameBuffer;
     }
 
     //10f
@@ -88,10 +82,11 @@ public class InputRecv : MonoBehaviour
 
     protected static bool OnGround(Vector3 pos)
     {
-        Ray ray = new Ray(pos + Vector3.up * 0.01f, Vector3.down);
-        bool value = Physics.Raycast(ray, 0.02f, 1 << LayerMask.NameToLayer("Environment"));
-        Debug.DrawLine(pos + Vector3.up * 0.01f, pos - Vector3.up * 0.01f, Color.red);
-        return value;
+        //Ray ray = new Ray(pos + Vector3.up * 0.01f, Vector3.down);
+        //bool value = Physics.Raycast(ray, 0.02f, 1 << LayerMask.NameToLayer("Environment"));
+        //Debug.DrawLine(pos + Vector3.up * 0.01f, pos - Vector3.up * 0.01f, Color.red);
+        //return value;
+        return pos.y <= 0;
     }
 
     //10f
@@ -107,11 +102,23 @@ public class InputRecv : MonoBehaviour
         {
             position = new Vector3(0, 0, z);
         }
-        else if (y > 0 && OnGround(target.position) == true)
+
+        if (OnGround(target.position) && playerVelocity.y < 0)
         {
-            position = new Vector3(0, 1, 0);
+            //position = new Vector3(0, 1, 0);
+            playerVelocity.y = 0;
         }
+
+        if (OnGround(target.position) && y > 0)
+        {
+            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+        }
+        playerVelocity.y += gravityValue;
+
+        position += playerVelocity;
+
         Vector3 pos = target.position + position;
+        pos.y = Mathf.Clamp(pos.y, 0, pos.y);
 
         InputRender render = new InputRender();
         render.Tick = buffer.Tick;
@@ -131,6 +138,8 @@ public class InputRecv : MonoBehaviour
         render.position = pos;
         buffers.Enqueue(render);
     }
+
+
 }
 
 public class InputBuffer
