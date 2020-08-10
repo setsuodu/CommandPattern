@@ -98,14 +98,13 @@ public class InputRecv : MonoBehaviour
 
         //TODO: 6帧跳跃、6帧落地
         Vector3 position = Vector3.zero;
-        if (y == 0)
+        if (OnGround(target.position) && y == 0)
         {
             position = new Vector3(0, 0, z);
         }
 
         if (OnGround(target.position) && playerVelocity.y < 0)
         {
-            //position = new Vector3(0, 1, 0);
             playerVelocity.y = 0;
         }
 
