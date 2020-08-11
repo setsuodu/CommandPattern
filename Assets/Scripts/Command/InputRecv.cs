@@ -11,12 +11,10 @@ public class InputRecv : MonoBehaviour
 
     static Queue<InputRender> buffers;
     InputRender frameBuffer;
-    InputRender lastFrameBuffer;
-    bool m_IsJump;
 
     public AnimationCurve cJump;
     public const float jumpHeight = 3.0f;
-    public const float gravityValue = -1;//-9.81f;
+    public const float gravityValue = -0.25f;//-9.81f;
     public static Vector3 playerVelocity;
 
     public static bool W()
@@ -82,21 +80,16 @@ public class InputRecv : MonoBehaviour
 
     protected static bool OnGround(Vector3 pos)
     {
-        //Ray ray = new Ray(pos + Vector3.up * 0.01f, Vector3.down);
-        //bool value = Physics.Raycast(ray, 0.02f, 1 << LayerMask.NameToLayer("Environment"));
-        //Debug.DrawLine(pos + Vector3.up * 0.01f, pos - Vector3.up * 0.01f, Color.red);
-        //return value;
         return pos.y <= 0;
     }
 
     //10f
     public static void PlacePos(Transform target, InputBuffer buffer)
     {
-        //TODO: 跳跃中不允许移动
         float y = (buffer.W ? 1f : 0) + (buffer.S ? -1f : 0);
         float z = (buffer.D ? 1f : 0) + (buffer.A ? -1f : 0);
 
-        //TODO: 6帧跳跃、6帧落地
+        //移动
         Vector3 position = Vector3.zero;
         if (OnGround(target.position) && y == 0)
         {
@@ -106,14 +99,49 @@ public class InputRecv : MonoBehaviour
         if (OnGround(target.position) && playerVelocity.y < 0)
         {
             playerVelocity.y = 0;
+            playerVelocity.z = 0;
         }
 
+        //跳跃
         if (OnGround(target.position) && y > 0)
         {
-            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-        }
-        playerVelocity.y += gravityValue;
+            if (z == 0)
+            {
+                //原地跳跃
+                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);//平方根
+            }
+            else if (z > 0)
+            {
+                //向前跳跃
+                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+                //position += new Vector3(0, 0, 3.0f);
 
+                playerVelocity.z += 1f;
+            }
+            else if (z < 0)
+            {
+                //向后跳跃
+                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+                //position += new Vector3(0, 0, -3.0f);
+
+                playerVelocity.z -= 1f;
+            }
+        }
+
+        //衰减
+        playerVelocity.y += gravityValue;
+        if (OnGround(target.position) == false)
+        {
+            //在空中
+            if (playerVelocity.z > 0)
+            {
+                playerVelocity.z -= 0.1f;
+            }
+            else if (playerVelocity.z < 0)
+            {
+                playerVelocity.z += 0.1f;
+            }
+        }
         position += playerVelocity;
 
         Vector3 pos = target.position + position;
@@ -137,8 +165,6 @@ public class InputRecv : MonoBehaviour
         render.position = pos;
         buffers.Enqueue(render);
     }
-
-
 }
 
 public class InputBuffer
