@@ -12,8 +12,8 @@ public class InputRecv : MonoBehaviour
     static Queue<InputRender> buffers;
     InputRender frameBuffer;
 
-    public AnimationCurve cJump;
-    public const float jumpHeight = 3.0f;
+    public const float hSpeed = 0.2f;
+    public const float jumpHeight = 2.0f;
     public const float gravityValue = -0.25f;//-9.81f;
     public static Vector3 playerVelocity;
 
@@ -86,8 +86,8 @@ public class InputRecv : MonoBehaviour
     //10f
     public static void PlacePos(Transform target, InputBuffer buffer)
     {
-        float y = (buffer.W ? 1f : 0) + (buffer.S ? -1f : 0);
-        float z = (buffer.D ? 1f : 0) + (buffer.A ? -1f : 0);
+        float y = (buffer.W ? hSpeed : 0) + (buffer.S ? -hSpeed : 0);
+        float z = (buffer.D ? hSpeed : 0) + (buffer.A ? -hSpeed : 0);
 
         //移动
         Vector3 position = Vector3.zero;
@@ -114,17 +114,13 @@ public class InputRecv : MonoBehaviour
             {
                 //向前跳跃
                 playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-                //position += new Vector3(0, 0, 3.0f);
-
-                playerVelocity.z += 1f;
+                playerVelocity.z += 0.5f;
             }
             else if (z < 0)
             {
                 //向后跳跃
                 playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-                //position += new Vector3(0, 0, -3.0f);
-
-                playerVelocity.z -= 1f;
+                playerVelocity.z -= 0.5f;
             }
         }
 
@@ -135,11 +131,11 @@ public class InputRecv : MonoBehaviour
             //在空中
             if (playerVelocity.z > 0)
             {
-                playerVelocity.z -= 0.1f;
+                playerVelocity.z -= 0.05f;
             }
             else if (playerVelocity.z < 0)
             {
-                playerVelocity.z += 0.1f;
+                playerVelocity.z += 0.05f;
             }
         }
         position += playerVelocity;
