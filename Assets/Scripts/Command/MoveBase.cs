@@ -33,34 +33,112 @@ public class MoveBase : MonoBehaviour
 
     public virtual void FixedUpdate() { }
 
+    protected virtual bool OnGround()
+    {
+        return transform.position.y <= 0;
+    }
+
+    // 跳跃
     protected virtual bool W()
     {
         return Input.GetKey(KeyCode.W);
     }
+    protected virtual bool _Jump()
+    {
+        bool value = Input.GetKey(KeyCode.W)
+            //&& animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")
+            && OnGround();
+        return value;
+    }
 
+    // 蹲下
     protected virtual bool S()
     {
         return Input.GetKey(KeyCode.S);
+    }
+    protected virtual bool _Crouch()
+    {
+        bool value = Input.GetKey(KeyCode.S) && OnGround();
+        return value;
     }
 
     protected virtual bool A()
     {
         return Input.GetKey(KeyCode.A);
     }
+    protected virtual bool _Left()
+    {
+        return (Input.GetAxisRaw("Horizontal") < 0)
+            && OnGround()
+            && !_Crouch();
+    }
 
     protected virtual bool D()
     {
         return Input.GetKey(KeyCode.D);
     }
-
-    protected virtual bool OnGround()
+    protected virtual bool _Right()
     {
-        return transform.position.y <= 0;
+        return (Input.GetAxisRaw("Horizontal") > 0)
+            && OnGround()
+            && !_Crouch();
     }
 
-    protected virtual bool _Crouch()
+    protected virtual bool _JumpLeft()
     {
-        bool value = Input.GetKey(KeyCode.S) && OnGround();
+        return Input.GetKey(KeyCode.W)
+            //&& animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")
+            && (Input.GetAxisRaw("Horizontal") < 0)
+            && OnGround();
+    }
+
+    protected virtual bool _JumpRight()
+    {
+        return Input.GetKey(KeyCode.W)
+            //&& animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")
+            && (Input.GetAxisRaw("Horizontal") > 0)
+            && OnGround();
+    }
+
+    // 轻拳
+    protected virtual bool _Punch0()
+    {
+        bool value = Input.GetKeyDown(KeyCode.H);
+        return value;
+    }
+
+    // 中拳
+    protected virtual bool _Punch1()
+    {
+        bool value = Input.GetKeyDown(KeyCode.J);
+        return value;
+    }
+
+    // 重拳
+    protected virtual bool _Punch2()
+    {
+        bool value = Input.GetKeyDown(KeyCode.K);
+        return value;
+    }
+
+    // 轻踢
+    protected virtual bool _Kick0()
+    {
+        bool value = Input.GetKeyDown(KeyCode.Y);
+        return value;
+    }
+
+    // 这个踢
+    protected virtual bool _Kick1()
+    {
+        bool value = Input.GetKeyDown(KeyCode.U);
+        return value;
+    }
+
+    // 重踢
+    protected virtual bool _Kick2()
+    {
+        bool value = Input.GetKeyDown(KeyCode.I);
         return value;
     }
 
