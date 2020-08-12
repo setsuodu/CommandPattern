@@ -5,113 +5,86 @@ using UnityEngine;
 //影子物体（没有插值的）
 public class MoveBase : MonoBehaviour
 {
+    public MoveBase rival;//对手
+    [SerializeField] protected Direction direction = Direction.Error;
+    [SerializeField] protected Body body;
+    [SerializeField] protected MotionStatus status;
+    public static int IdleHash = 2081823275;
+    public static int MoveHash = -281135240;
+    public static int JumpHash = 608663733;
+    public static int FallDownHash = 426567206;
+    public static int LandHash = 137525990;
+    public static int CrouchHash = 70061904;
+    public static int PunchHash = -802095957;
+    public static int KickHash = -1916918463;
+
     public int Tick;
 
     public float _lerpTime;
-    static Queue<InputRender> buffers;
-    InputRender frameBuffer;
+    public static Queue<InputRender> buffers;
+    public InputRender frameBuffer;
 
     protected static float MOVE_SPEED = 0.2f;
     protected const float JUMP_HEIGHT = 2.0f;
     protected const float GRAVITY = -0.25f;//-9.81f;
     public static Vector3 playerVelocity;
 
-    void Awake()
-    {
-        buffers = new Queue<InputRender>();
-    }
+    public virtual void Update() { }
 
-    //60f，不稳定
-    void Update()
-    {
-        OnGround(transform.position);
+    public virtual void FixedUpdate() { }
 
-        if (buffers.Count > 0)
-        {
-            //新的帧
-            frameBuffer = buffers.Dequeue();
-            _lerpTime = 0;
-        }
-
-        if (frameBuffer == null)
-            return;
-
-        transform.position = frameBuffer.position;
-    }
-
-    //20f（每帧发送按键输入）
-    void FixedUpdate()
-    {
-        if (!GameManager.Instance.IsStart)
-            return;
-
-        Tick++;
-
-        //模拟发送
-        InputBuffer buffer = new InputBuffer();
-        buffer.Tick = this.Tick;
-        buffer.W = W();
-        buffer.S = S();
-        buffer.A = A();
-        buffer.D = D();
-
-        //模拟解析
-        ICommand command = new MoveCommand(transform, buffer);
-        CommandInvoker.AddCommand(command);
-    }
-
-    protected static bool W()
+    protected virtual bool W()
     {
         return Input.GetKey(KeyCode.W);
     }
 
-    protected static bool S()
+    protected virtual bool S()
     {
         return Input.GetKey(KeyCode.S);
     }
 
-    protected static bool A()
+    protected virtual bool A()
     {
         return Input.GetKey(KeyCode.A);
     }
 
-    protected static bool D()
+    protected virtual bool D()
     {
         return Input.GetKey(KeyCode.D);
     }
 
-    protected static bool OnGround(Vector3 pos)
+    protected virtual bool OnGround()
     {
-        return pos.y <= 0;
+        return transform.position.y <= 0;
     }
 
-    //protected virtual bool _Crouch()
-    //{
-    //    bool value = Input.GetKey(KeyCode.S) && OnGround();
-    //    return value;
-    //}
+    protected virtual bool _Crouch()
+    {
+        bool value = Input.GetKey(KeyCode.S) && OnGround();
+        return value;
+    }
 
     //20f（收到消息解析，同步影子玩家）
-    public static void PlacePos(Transform target, InputBuffer buffer)
+    public void PlacePos(Transform target, InputBuffer buffer)
     {
         float y = (buffer.W ? MOVE_SPEED : 0) + (buffer.S ? -MOVE_SPEED : 0);
         float z = (buffer.D ? MOVE_SPEED : 0) + (buffer.A ? -MOVE_SPEED : 0);
 
         //移动
         Vector3 position = Vector3.zero;
-        if (OnGround(target.position) && y == 0)
+        if (OnGround() && y == 0)
         {
             position = new Vector3(0, 0, z);
         }
 
-        if (OnGround(target.position) && playerVelocity.y < 0)
+        if (OnGround() && playerVelocity.y < 0)
         {
             playerVelocity.y = 0;
             playerVelocity.z = 0;
         }
 
         //跳跃
-        if (OnGround(target.position) && y > 0)
+        if (OnGround() && y > 0)
         {
             if (z == 0)
             {
@@ -134,7 +107,7 @@ public class MoveBase : MonoBehaviour
 
         //衰减
         playerVelocity.y += GRAVITY;
-        if (OnGround(target.position) == false)
+        if (OnGround() == false)
         {
             //在空中
             if (playerVelocity.z > 0)
@@ -155,9 +128,17 @@ public class MoveBase : MonoBehaviour
         render.Tick = buffer.Tick;
         render.position = pos;
         buffers.Enqueue(render);
+
+
+        if (rival.transform.position.x > transform.position.x)
+        {
+
+        }
+
+
     }
 
-    public static void RemovePos(Transform target, InputBuffer buffer)
+    public void RemovePos(Transform target, InputBuffer buffer)
     {
         float h = (buffer.D ? 1f : 0) + (buffer.A ? -1f : 0);
 
@@ -169,25 +150,4 @@ public class MoveBase : MonoBehaviour
         render.position = pos;
         buffers.Enqueue(render);
     }
-}
-
-public class InputBuffer
-{
-    public int Tick;
-    public bool W;
-    public bool S;
-    public bool A;
-    public bool D;
-
-    public override string ToString()
-    {
-        return $"Input：\t{(W ? "W" : "")}\t{(S ? "S" : "")}\t{(A ? "A" : "")}\t{(D ? "D" : "")}";
-    }
-}
-
-public class InputRender
-{
-    public int Tick;
-    public Vector3 position;
-    public bool Jump;
 }

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class MoveCommand : ICommand //接口要有实现
 {
-    Transform target;
+    MoveBase target;
     InputBuffer buffer;
 
-    public MoveCommand(Transform target, InputBuffer buffer)
+    public MoveCommand(MoveBase target, InputBuffer buffer)
     {
         this.target = target;
         this.buffer = buffer;
@@ -15,12 +15,12 @@ public class MoveCommand : ICommand //接口要有实现
 
     public void Execute()
     {
-        MoveBase.PlacePos(target, buffer);
+        target.PlacePos(target.transform, buffer);
     }
 
     public void Undo()
     {
-        MoveBase.RemovePos(target, buffer);
+        target.RemovePos(target.transform, buffer);
     }
 
     public override string ToString()
