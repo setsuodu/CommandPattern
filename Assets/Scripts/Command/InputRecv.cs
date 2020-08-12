@@ -17,26 +17,6 @@ public class InputRecv : MonoBehaviour
     public const float gravityValue = -0.25f;//-9.81f;
     public static Vector3 playerVelocity;
 
-    public static bool W()
-    {
-        return Input.GetKey(KeyCode.W);
-    }
-
-    public static bool S()
-    {
-        return Input.GetKey(KeyCode.S);
-    }
-
-    public static bool A()
-    {
-        return Input.GetKey(KeyCode.A);
-    }
-
-    public static bool D()
-    {
-        return Input.GetKey(KeyCode.D);
-    }
-
     void Awake()
     {
         buffers = new Queue<InputRender>();
@@ -76,6 +56,26 @@ public class InputRecv : MonoBehaviour
         buffer.D = D();
         ICommand command = new MoveCommand(transform, buffer);
         CommandInvoker.AddCommand(command);
+    }
+
+    protected static bool W()
+    {
+        return Input.GetKey(KeyCode.W);
+    }
+
+    protected static bool S()
+    {
+        return Input.GetKey(KeyCode.S);
+    }
+
+    protected static bool A()
+    {
+        return Input.GetKey(KeyCode.A);
+    }
+
+    protected static bool D()
+    {
+        return Input.GetKey(KeyCode.D);
     }
 
     protected static bool OnGround(Vector3 pos)
