@@ -15,12 +15,12 @@ public class MoveCommand : ICommand //接口要有实现
 
     public void Execute()
     {
-        InputRecv.PlacePos(target, buffer);
+        MoveBase.PlacePos(target, buffer);
     }
 
     public void Undo()
     {
-        InputRecv.RemovePos(target, buffer);
+        MoveBase.RemovePos(target, buffer);
     }
 
     public override string ToString()

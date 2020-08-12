@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //影子物体（没有插值的）
-public class InputRecv : MonoBehaviour
+public class MoveBase : MonoBehaviour
 {
-    public bool IsStart;
     public int Tick;
-    public float _lerpTime;
 
+    public float _lerpTime;
     static Queue<InputRender> buffers;
     InputRender frameBuffer;
 
-    public const float hSpeed = 0.2f;
-    public const float jumpHeight = 2.0f;
-    public const float gravityValue = -0.25f;//-9.81f;
+    protected static float MOVE_SPEED = 0.2f;
+    protected const float JUMP_HEIGHT = 2.0f;
+    protected const float GRAVITY = -0.25f;//-9.81f;
     public static Vector3 playerVelocity;
 
     void Awake()
@@ -40,20 +39,23 @@ public class InputRecv : MonoBehaviour
         transform.position = frameBuffer.position;
     }
 
-    //10f
+    //20f（每帧发送按键输入）
     void FixedUpdate()
     {
-        if (!IsStart)
+        if (!GameManager.Instance.IsStart)
             return;
 
         Tick++;
 
+        //模拟发送
         InputBuffer buffer = new InputBuffer();
         buffer.Tick = this.Tick;
         buffer.W = W();
         buffer.S = S();
         buffer.A = A();
         buffer.D = D();
+
+        //模拟解析
         ICommand command = new MoveCommand(transform, buffer);
         CommandInvoker.AddCommand(command);
     }
@@ -83,11 +85,17 @@ public class InputRecv : MonoBehaviour
         return pos.y <= 0;
     }
 
-    //10f
+    //protected virtual bool _Crouch()
+    //{
+    //    bool value = Input.GetKey(KeyCode.S) && OnGround();
+    //    return value;
+    //}
+
+    //20f（收到消息解析，同步影子玩家）
     public static void PlacePos(Transform target, InputBuffer buffer)
     {
-        float y = (buffer.W ? hSpeed : 0) + (buffer.S ? -hSpeed : 0);
-        float z = (buffer.D ? hSpeed : 0) + (buffer.A ? -hSpeed : 0);
+        float y = (buffer.W ? MOVE_SPEED : 0) + (buffer.S ? -MOVE_SPEED : 0);
+        float z = (buffer.D ? MOVE_SPEED : 0) + (buffer.A ? -MOVE_SPEED : 0);
 
         //移动
         Vector3 position = Vector3.zero;
@@ -108,24 +116,24 @@ public class InputRecv : MonoBehaviour
             if (z == 0)
             {
                 //原地跳跃
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);//平方根
+                playerVelocity.y += Mathf.Sqrt(JUMP_HEIGHT * -3.0f * GRAVITY);//平方根
             }
             else if (z > 0)
             {
                 //向前跳跃
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+                playerVelocity.y += Mathf.Sqrt(JUMP_HEIGHT * -3.0f * GRAVITY);
                 playerVelocity.z += 0.5f;
             }
             else if (z < 0)
             {
                 //向后跳跃
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+                playerVelocity.y += Mathf.Sqrt(JUMP_HEIGHT * -3.0f * GRAVITY);
                 playerVelocity.z -= 0.5f;
             }
         }
 
         //衰减
-        playerVelocity.y += gravityValue;
+        playerVelocity.y += GRAVITY;
         if (OnGround(target.position) == false)
         {
             //在空中

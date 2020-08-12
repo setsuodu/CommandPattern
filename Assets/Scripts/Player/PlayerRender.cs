@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerRender : MonoBehaviour
 {
     public Transform shadow;
-    public InputRecv m_InputRecv;
+    public MoveBase m_InputRecv;
 
     void Update()
     {

@@ -24,8 +24,6 @@ public class MyHierarchyIcon
         foreach (GameObject g in go)
         {
             // Example: mark all lights
-            //if (g.GetComponent<Light>() != null)
-            //    markedObjects.Add(g.GetInstanceID());
             if (g.tag == "Player")
                 markedObjects.Add(g.GetInstanceID());
         }
