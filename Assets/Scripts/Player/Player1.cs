@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class Player1 : MoveBase
 {
-    void Awake()
+    public override void Awake()
     {
+        base.Awake();
+
         buffers = new Queue<InputRender>();
     }
 
     //60f，不稳定
     public override void Update()
     {
+        base.Update();
+
         OnGround();
 
         if (buffers.Count > 0)
@@ -30,6 +34,8 @@ public class Player1 : MoveBase
     //20f（每帧发送按键输入）
     public override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         if (!GameManager.Instance.IsStart)
             return;
 

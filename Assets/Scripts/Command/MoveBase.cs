@@ -5,6 +5,7 @@ using UnityEngine;
 //影子物体（没有插值的）
 public class MoveBase : MonoBehaviour
 {
+    protected Transform child;//自身
     public MoveBase rival;//对手
     [SerializeField] protected Direction direction = Direction.Error;
     [SerializeField] protected Body body;
@@ -23,11 +24,19 @@ public class MoveBase : MonoBehaviour
     public float _lerpTime;
     public static Queue<InputRender> buffers;
     public InputRender frameBuffer;
+    protected float distance; //右减左
 
     protected static float MOVE_SPEED = 0.2f;
     protected const float JUMP_HEIGHT = 2.0f;
     protected const float GRAVITY = -0.25f;//-9.81f;
     public static Vector3 playerVelocity;
+    protected static Vector3 POS_SIZE = new Vector3(0.1f, 1.6f, 0.5f);
+    protected static Vector3 NEG_SIZE = new Vector3(-0.1f, 1.6f, 0.5f);
+
+    public virtual void Awake()
+    {
+        child = transform.GetChild(0);
+    }
 
     public virtual void Update() { }
 
@@ -202,18 +211,59 @@ public class MoveBase : MonoBehaviour
         Vector3 pos = target.position + position;
         pos.y = Mathf.Clamp(pos.y, 0, pos.y);
 
+        //PushBox计算
+        if (rival.transform.position.z > pos.z)
+        {
+            //自己在左，对手在右
+            direction = Direction.Right;
+            child.localScale = POS_SIZE;
+            child.rotation = new Quaternion(0, 0, 0, 0);
+
+
+            distance = rival.transform.position.x - pos.x;
+            if (distance < 0.5f)
+            {
+                if ((status == MotionStatus.MoveForward || status == MotionStatus.JumpForward) && z > 0)
+                {
+                    //Push();
+                }
+                else if (status == MotionStatus.Idle && rival.OnGround())
+                {
+                    //pos += new Vector3(0, 0, -(0.5f - distance));
+                }
+            }
+        }
+        else if (rival.transform.position.z < pos.z)
+        {
+            //对手在左，自己在右
+            direction = Direction.Left;
+            child.localScale = NEG_SIZE;
+            child.rotation = new Quaternion(0, 1, 0, 0);
+
+
+            distance = pos.x - rival.transform.position.x;
+            if (distance < 0.5f)
+            {
+                if ((status == MotionStatus.MoveForward || status == MotionStatus.JumpForward) && z < 0)
+                {
+                    //Push();
+                }
+                else if (status == MotionStatus.Idle && rival.OnGround())
+                {
+                    //pos += new Vector3(0, 0, (0.5f - distance));
+                }
+            }
+        }
+        else
+        {
+            direction = Direction.Error;
+        }
+
+
         InputRender render = new InputRender();
         render.Tick = buffer.Tick;
         render.position = pos;
         buffers.Enqueue(render);
-
-
-        if (rival.transform.position.x > transform.position.x)
-        {
-
-        }
-
-
     }
 
     public void RemovePos(Transform target, InputBuffer buffer)
