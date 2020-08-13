@@ -5,7 +5,8 @@ using UnityEngine;
 //影子物体（没有插值的）
 public class MoveBase : MonoBehaviour
 {
-    protected Transform child;//自身
+    public int uid = 0;
+    public Transform child;//自身
     public MoveBase rival;//对手
     [SerializeField] protected Direction direction = Direction.Error;
     [SerializeField] protected Body body;
@@ -24,10 +25,10 @@ public class MoveBase : MonoBehaviour
     public float _lerpTime;
     public static Queue<InputRender> buffers;
     public InputRender frameBuffer;
-    protected float distance; //右减左
+    public float distance; //右减左
 
-    protected static float MOVE_SPEED = 0.2f;
-    protected const float JUMP_HEIGHT = 2.0f;
+    protected static float MOVE_SPEED = 0.1f;
+    protected const float JUMP_HEIGHT = 1.5f;
     protected const float GRAVITY = -0.25f;//-9.81f;
     public static Vector3 playerVelocity;
     protected static Vector3 POS_SIZE = new Vector3(0.1f, 1.6f, 0.5f);
@@ -54,9 +55,7 @@ public class MoveBase : MonoBehaviour
     }
     protected virtual bool _Jump()
     {
-        bool value = Input.GetKey(KeyCode.W)
-            //&& animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")
-            && OnGround();
+        bool value = Input.GetKey(KeyCode.W) && OnGround();
         return value;
     }
 
@@ -151,11 +150,31 @@ public class MoveBase : MonoBehaviour
         return value;
     }
 
+    // 被另一个Player推动（只有一方静止，并且没有靠墙，才能被推动）
+    public void ForceMove(Vector3 move)
+    {
+        if (move.magnitude > 1f)
+            move.Normalize();
+        Debug.Log("ForceMove: " + move);
+        transform.Translate(move * 0.1f);
+    }
+
+    // 主动施加作用力
+    public void Push(Vector3 move)
+    {
+        rival.ForceMove(move);
+    }
+
     //20f（收到消息解析，同步影子玩家）
     public void PlacePos(Transform target, InputBuffer buffer)
     {
+        //非本体操作数据
+        //if (transform.name.Contains("2"))
+        //    return;
+
         float y = (buffer.W ? MOVE_SPEED : 0) + (buffer.S ? -MOVE_SPEED : 0);
         float z = (buffer.D ? MOVE_SPEED : 0) + (buffer.A ? -MOVE_SPEED : 0);
+        //Debug.Log($"(0,{y},{z})");
 
         //移动
         Vector3 position = Vector3.zero;
@@ -182,13 +201,13 @@ public class MoveBase : MonoBehaviour
             {
                 //向前跳跃
                 playerVelocity.y += Mathf.Sqrt(JUMP_HEIGHT * -3.0f * GRAVITY);
-                playerVelocity.z += 0.5f;
+                playerVelocity.z += 0.4f;
             }
             else if (z < 0)
             {
                 //向后跳跃
                 playerVelocity.y += Mathf.Sqrt(JUMP_HEIGHT * -3.0f * GRAVITY);
-                playerVelocity.z -= 0.5f;
+                playerVelocity.z -= 0.4f;
             }
         }
 
@@ -211,6 +230,7 @@ public class MoveBase : MonoBehaviour
         Vector3 pos = target.position + position;
         pos.y = Mathf.Clamp(pos.y, 0, pos.y);
 
+
         //PushBox计算
         if (rival.transform.position.z > pos.z)
         {
@@ -219,13 +239,34 @@ public class MoveBase : MonoBehaviour
             child.localScale = POS_SIZE;
             child.rotation = new Quaternion(0, 0, 0, 0);
 
+            if (z > 0 && OnGround() && y ==0)
+            {
+                status = MotionStatus.MoveForward;
+            }
+            else if (z < 0 && OnGround() && y == 0)
+            {
+                status = MotionStatus.MoveBackward;
+            }
+            else if (z == 0 && OnGround() && y == 0)
+            {
+                status = MotionStatus.Idle;
+            }
+            else if (!OnGround())
+            {
+                // 向前跳碰撞
+                status = MotionStatus.Jump;
+            }
+            else
+            {
+                //Debug.Log($"h={h} && hash={animator.GetCurrentAnimatorStateInfo(0).shortNameHash}");
+            }
 
-            distance = rival.transform.position.x - pos.x;
+            distance = rival.transform.position.z - pos.z;
             if (distance < 0.5f)
             {
                 if ((status == MotionStatus.MoveForward || status == MotionStatus.JumpForward) && z > 0)
                 {
-                    //Push();
+                    Push(pos);
                 }
                 else if (status == MotionStatus.Idle && rival.OnGround())
                 {
@@ -240,17 +281,38 @@ public class MoveBase : MonoBehaviour
             child.localScale = NEG_SIZE;
             child.rotation = new Quaternion(0, 1, 0, 0);
 
+            if (z > 0 && OnGround() && y == 0)
+            {
+                status = MotionStatus.MoveForward;
+            }
+            else if (z < 0 && OnGround() && y == 0)
+            {
+                status = MotionStatus.MoveBackward;
+            }
+            else if (z == 0 && OnGround() && y == 0)
+            {
+                status = MotionStatus.Idle;
+            }
+            else if (!OnGround())
+            {
+                // 向前跳碰撞
+                status = MotionStatus.Jump;
+            }
+            else
+            {
+                //Debug.Log($"h={h} && hash={animator.GetCurrentAnimatorStateInfo(0).shortNameHash}");
+            }
 
-            distance = pos.x - rival.transform.position.x;
+            distance = pos.z - rival.transform.position.z;
             if (distance < 0.5f)
             {
                 if ((status == MotionStatus.MoveForward || status == MotionStatus.JumpForward) && z < 0)
                 {
-                    //Push();
+                    Push(pos);//移动中推动
                 }
                 else if (status == MotionStatus.Idle && rival.OnGround())
                 {
-                    //pos += new Vector3(0, 0, (0.5f - distance));
+                    //pos += new Vector3(0, 0, (0.5f - distance));//降落中推动
                 }
             }
         }

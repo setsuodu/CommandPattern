@@ -4,44 +4,34 @@ using UnityEngine;
 
 public class Player2 : MoveBase
 {
-    void Start()
+    public override void Awake()
     {
-        
+        base.uid = 2;
+        base.Awake();
     }
 
-    void Update()
+    public override void Update()
     {
 
     }
 
-    protected static bool W()
+    protected override bool W()
     {
         return Input.GetKey(KeyCode.Keypad8);
     }
 
-    protected static bool S()
+    protected override bool S()
     {
         return Input.GetKey(KeyCode.Keypad5);
     }
 
-    protected static bool A()
+    protected override bool A()
     {
         return Input.GetKey(KeyCode.Keypad4);
     }
 
-    protected static bool D()
+    protected override bool D()
     {
         return Input.GetKey(KeyCode.Keypad6);
     }
-
-    protected static bool OnGround(Vector3 pos)
-    {
-        return pos.y <= 0;
-    }
-
-    //protected virtual bool _Crouch()
-    //{
-    //    bool value = Input.GetKey(KeyCode.S) && OnGround();
-    //    return value;
-    //}
 }

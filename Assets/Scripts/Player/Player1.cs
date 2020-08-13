@@ -6,15 +6,15 @@ public class Player1 : MoveBase
 {
     public override void Awake()
     {
-        base.Awake();
-
+        base.uid = 1;
         buffers = new Queue<InputRender>();
+        base.Awake();
     }
 
     //60f，不稳定
     public override void Update()
     {
-        base.Update();
+        //base.Update();
 
         OnGround();
 
@@ -34,7 +34,7 @@ public class Player1 : MoveBase
     //20f（每帧发送按键输入）
     public override void FixedUpdate()
     {
-        base.FixedUpdate();
+        //base.FixedUpdate();
 
         if (!GameManager.Instance.IsStart)
             return;
@@ -43,6 +43,7 @@ public class Player1 : MoveBase
 
         //模拟发送
         InputBuffer buffer = new InputBuffer();
+        buffer.UID = 1;
         buffer.Tick = this.Tick;
         buffer.W = W();
         buffer.S = S();

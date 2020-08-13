@@ -2,6 +2,7 @@
 
 public class InputBuffer
 {
+    public int UID;
     public int Tick;
     public bool W;
     public bool S;
