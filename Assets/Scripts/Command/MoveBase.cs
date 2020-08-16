@@ -8,7 +8,7 @@ public class MoveBase : MonoBehaviour
     public int uid = 0;
     public Transform child;//自身
     public MoveBase rival;//对手
-    [SerializeField] protected Direction direction = Direction.Error;
+    public Direction direction = Direction.Error;
     [SerializeField] protected Body body;
     [SerializeField] protected MotionStatus status;
     public static int IdleHash = 2081823275;
@@ -230,6 +230,7 @@ public class MoveBase : MonoBehaviour
         }
         position += playerVelocity;
 
+        //移动到的位置
         Vector3 pos = target.position + position;
         pos.y = Mathf.Clamp(pos.y, 0, pos.y);
 

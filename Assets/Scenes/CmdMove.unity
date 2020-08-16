@@ -1033,7 +1033,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shadow: {fileID: 1489274918}
-  m_InputRecv: {fileID: 1489274915}
+  m_BaseMove: {fileID: 1489274915}
 --- !u!1 &1301400032
 GameObject:
   m_ObjectHideFlags: 0
@@ -1545,7 +1545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shadow: {fileID: 469411594}
-  m_InputRecv: {fileID: 469411593}
+  m_BaseMove: {fileID: 469411593}
 --- !u!1 &1930733851
 GameObject:
   m_ObjectHideFlags: 0
