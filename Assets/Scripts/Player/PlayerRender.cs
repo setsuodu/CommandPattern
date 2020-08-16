@@ -22,6 +22,7 @@ public class PlayerRender : MonoBehaviour
 
     void Update()
     {
+        //transform.position = shadow.position;
         //transform.position = Vector3.Lerp(transform.position, shadow.position, 0.1f);
         transform.position = Vector3.Lerp(transform.position, shadow.position, m_InputRecv._lerpTime);
         m_InputRecv._lerpTime += Time.deltaTime / Time.fixedDeltaTime;

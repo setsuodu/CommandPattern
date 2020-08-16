@@ -31,8 +31,11 @@ public class MoveBase : MonoBehaviour
     protected const float JUMP_HEIGHT = 1.5f;
     protected const float GRAVITY = -0.25f;//-9.81f;
     public static Vector3 playerVelocity;
-    protected static Vector3 POS_SIZE = new Vector3(0.1f, 1.6f, 0.5f);
-    protected static Vector3 NEG_SIZE = new Vector3(-0.1f, 1.6f, 0.5f);
+    const float SCALE_X = 0.05f;
+    const float SCALE_Y = 1.4f;
+    const float SCALE_Z = 0.4f;
+    protected static Vector3 POS_SIZE = new Vector3(SCALE_X, SCALE_Y, SCALE_Z);
+    protected static Vector3 NEG_SIZE = new Vector3(-SCALE_X, SCALE_Y, SCALE_Z);
 
     public virtual void Awake()
     {
@@ -262,7 +265,7 @@ public class MoveBase : MonoBehaviour
             }
 
             distance = rival.transform.position.z - pos.z;
-            if (distance < 0.5f)
+            if (distance < SCALE_Z)
             {
                 if ((status == MotionStatus.MoveForward || status == MotionStatus.JumpForward) && z > 0)
                 {
@@ -304,7 +307,7 @@ public class MoveBase : MonoBehaviour
             }
 
             distance = pos.z - rival.transform.position.z;
-            if (distance < 0.5f)
+            if (distance < SCALE_Z)
             {
                 if ((status == MotionStatus.MoveForward || status == MotionStatus.JumpForward) && z < 0)
                 {
