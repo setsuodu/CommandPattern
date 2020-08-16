@@ -158,8 +158,7 @@ public class MoveBase : MonoBehaviour
     {
         if (move.magnitude > 1f)
             move.Normalize();
-        Debug.Log("ForceMove: " + move);
-        transform.Translate(move * 0.1f);
+        transform.Translate(move);
     }
 
     // 主动施加作用力
@@ -171,13 +170,8 @@ public class MoveBase : MonoBehaviour
     //20f（收到消息解析，同步影子玩家）
     public void PlacePos(Transform target, InputBuffer buffer)
     {
-        //非本体操作数据
-        //if (transform.name.Contains("2"))
-        //    return;
-
         float y = (buffer.W ? MOVE_SPEED : 0) + (buffer.S ? -MOVE_SPEED : 0);
         float z = (buffer.D ? MOVE_SPEED : 0) + (buffer.A ? -MOVE_SPEED : 0);
-        //Debug.Log($"(0,{y},{z})");
 
         //移动
         Vector3 position = Vector3.zero;
@@ -236,7 +230,7 @@ public class MoveBase : MonoBehaviour
 
 
         //PushBox计算
-        if (rival.transform.position.z > pos.z)
+        if (rival.transform.position.z > transform.position.z)
         {
             //自己在左，对手在右
             direction = Direction.Right;
@@ -270,15 +264,18 @@ public class MoveBase : MonoBehaviour
             {
                 if ((status == MotionStatus.MoveForward || status == MotionStatus.JumpForward) && z > 0)
                 {
-                    Push(pos);
+                    Vector3 pos1 = new Vector3(0, 0, SCALE_Z - distance);
+                    Debug.Log(distance + "，右推: " + pos1);
+                    Push(pos1);
                 }
                 else if (status == MotionStatus.Idle && rival.OnGround())
                 {
-                    //pos += new Vector3(0, 0, -(0.5f - distance));
+                    Vector3 pos1 = new Vector3(0, 0, SCALE_Z - distance);
+                    Push(pos1);
                 }
             }
         }
-        else if (rival.transform.position.z < pos.z)
+        else if (rival.transform.position.z < transform.position.z)
         {
             //对手在左，自己在右
             direction = Direction.Left;
@@ -287,11 +284,11 @@ public class MoveBase : MonoBehaviour
 
             if (z > 0 && OnGround() && y == 0)
             {
-                status = MotionStatus.MoveForward;
+                status = MotionStatus.MoveBackward;
             }
             else if (z < 0 && OnGround() && y == 0)
             {
-                status = MotionStatus.MoveBackward;
+                status = MotionStatus.MoveForward;
             }
             else if (z == 0 && OnGround() && y == 0)
             {
@@ -312,11 +309,14 @@ public class MoveBase : MonoBehaviour
             {
                 if ((status == MotionStatus.MoveForward || status == MotionStatus.JumpForward) && z < 0)
                 {
-                    Push(pos);//移动中推动
+                    Vector3 pos1 = new Vector3(0, 0, distance - SCALE_Z);
+                    Debug.Log(distance + "，左推: " + pos1);
+                    Push(pos1);//移动中推动
                 }
                 else if (status == MotionStatus.Idle && rival.OnGround())
                 {
-                    //pos += new Vector3(0, 0, (0.5f - distance));//降落中推动
+                    Vector3 pos1 = new Vector3(0, 0, distance - SCALE_Z);
+                    Push(pos1);
                 }
             }
         }
