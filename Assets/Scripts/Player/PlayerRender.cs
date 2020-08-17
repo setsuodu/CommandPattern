@@ -22,7 +22,7 @@ public class PlayerRender : MonoBehaviour
 
     void Update()
     {
-        //transform.position = shadow.position;
+        //位移
         //transform.position = Vector3.Lerp(transform.position, shadow.position, 0.1f);
         transform.position = Vector3.Lerp(transform.position, shadow.position, m_BaseMove._lerpTime);
         m_BaseMove._lerpTime += Time.deltaTime / Time.fixedDeltaTime;
@@ -38,5 +38,20 @@ public class PlayerRender : MonoBehaviour
                 transform.rotation = new Quaternion(0, 0, 0, 0);
                 break;
         }
+
+        float move_z = 0;
+        switch (m_BaseMove.status)
+        {
+            case MotionStatus.MoveForward:
+                move_z = 1;
+                break;
+            case MotionStatus.MoveBackward:
+                move_z = -1;
+                break;
+        }
+
+        //骨骼动画
+        animator.SetBool("OnGround", m_BaseMove.OnGround());
+        animator.SetFloat("Horizontal", move_z);
     }
 }

@@ -9,8 +9,8 @@ public class MoveBase : MonoBehaviour
     public Transform child;//自身
     public MoveBase rival;//对手
     public Direction direction = Direction.Error;
-    [SerializeField] protected Body body;
-    [SerializeField] protected MotionStatus status;
+    public Body body;
+    public MotionStatus status;
     public static int IdleHash = 2081823275;
     public static int MoveHash = -281135240;
     public static int JumpHash = 608663733;
@@ -30,7 +30,7 @@ public class MoveBase : MonoBehaviour
     protected static float MOVE_SPEED = 0.1f;
     protected const float JUMP_HEIGHT = 1.5f;
     protected const float GRAVITY = -0.25f;//-9.81f;
-    public static Vector3 playerVelocity;
+    public Vector3 playerVelocity;
     const float SCALE_X = 0.05f;
     const float SCALE_Y = 1.4f;
     const float SCALE_Z = 0.4f;
@@ -46,7 +46,7 @@ public class MoveBase : MonoBehaviour
 
     public virtual void FixedUpdate() { }
 
-    protected virtual bool OnGround()
+    public virtual bool OnGround()
     {
         return transform.position.y <= 0;
     }
