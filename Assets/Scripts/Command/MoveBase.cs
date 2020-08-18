@@ -32,10 +32,13 @@ public class MoveBase : MonoBehaviour
     protected const float GRAVITY = -0.25f;//-9.81f;
     public Vector3 playerVelocity;
     const float SCALE_X = 0.05f;
-    const float SCALE_Y = 1.4f;
+    const float SCALE_Y = 1.2f;
     const float SCALE_Z = 0.4f;
     protected static Vector3 POS_SIZE = new Vector3(SCALE_X, SCALE_Y, SCALE_Z);
     protected static Vector3 NEG_SIZE = new Vector3(-SCALE_X, SCALE_Y, SCALE_Z);
+
+    public Hitbox hitbox;
+    public Hurtbox hurtbox;
 
     public virtual void Awake()
     {
@@ -170,6 +173,7 @@ public class MoveBase : MonoBehaviour
     //20f（收到消息解析，同步影子玩家）
     public void PlacePos(Transform target, InputBuffer buffer)
     {
+        //分析按键组合，按优先级屏蔽无效操作
         float y = (buffer.W ? MOVE_SPEED : 0) + (buffer.S ? -MOVE_SPEED : 0);
         float z = (buffer.D ? MOVE_SPEED : 0) + (buffer.A ? -MOVE_SPEED : 0);
 
