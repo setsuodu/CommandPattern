@@ -1520,6 +1520,7 @@ GameObject:
   - component: {fileID: 1843619910}
   - component: {fileID: 1843619912}
   - component: {fileID: 1843619911}
+  - component: {fileID: 1843619913}
   m_Layer: 0
   m_Name: Hurtbox
   m_TagString: Untagged
@@ -1586,6 +1587,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1843619909}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1843619913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1843619909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af13dde46f4e56f4ba206b5b5fe4c6d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1873131492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1797,6 +1810,7 @@ GameObject:
   - component: {fileID: 1938983822}
   - component: {fileID: 1938983824}
   - component: {fileID: 1938983823}
+  - component: {fileID: 1938983825}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -1863,6 +1877,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1938983821}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1938983825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1938983821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b8087ed83ed95c4faf2977fefbc620d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PosY: 0
+  PosZ: 0
+  Width: 0
+  Height: 0
 --- !u!1 &1979354413
 GameObject:
   m_ObjectHideFlags: 0
@@ -1981,6 +2011,7 @@ GameObject:
   - component: {fileID: 6236562109481780993}
   - component: {fileID: 6236562109481781007}
   - component: {fileID: 6236562109481781006}
+  - component: {fileID: 6236562109481780994}
   m_Layer: 0
   m_Name: Pushbox
   m_TagString: Untagged
@@ -2002,6 +2033,18 @@ Transform:
   m_Father: {fileID: 1489274918}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6236562109481780994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6236562109481780992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f5da8c11a5e3854892cdf22bed3d9a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!23 &6236562109481781006
 MeshRenderer:
   m_ObjectHideFlags: 0
