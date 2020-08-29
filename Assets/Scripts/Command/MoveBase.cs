@@ -37,6 +37,7 @@ public class MoveBase : MonoBehaviour
     protected static Vector3 POS_SIZE = new Vector3(SCALE_X, SCALE_Y, SCALE_Z);
     protected static Vector3 NEG_SIZE = new Vector3(-SCALE_X, SCALE_Y, SCALE_Z);
 
+    public Pushbox pushbox;
     public Hitbox hitbox;
     public Hurtbox hurtbox;
 

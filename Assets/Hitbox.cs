@@ -50,7 +50,7 @@ public class Hitbox : MonoBehaviour
 
     void Update()
     {
-        transform.parent.transform.Translate(Vector3.right * Time.deltaTime);
+        //transform.parent.transform.Translate(Vector3.right * Time.deltaTime);
     }
 
     public void Play(int frame)
